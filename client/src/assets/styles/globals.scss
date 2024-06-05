@@ -49,7 +49,7 @@ p,
 ul,
 ol,
 li {
-  color: #222;
+  color: #272727;
 }
 
 button,
@@ -65,6 +65,33 @@ h2 {
   margin-bottom: 25px;
   @include mobile {
     text-align: center;
+  }
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  &__icon {
+    width: 68px;
+    height: 52px;
+  }
+  &__title {
+    font-family: "Aldrich", sans-serif;
+    font-size: 36px;
+    font-weight: 400;
+    @include tablet {
+      margin-right: auto;
+      margin-left: auto;
+    }
+    @include mobile {
+      margin-right: auto;
+      margin-left: auto;
+    }
+    &-color {
+      font-family: "Aldrich", sans-serif;
+      color: $primaryColor;
+    }
   }
 }
 
@@ -88,6 +115,29 @@ h2 {
 
   &:active {
     background-color: darken($primaryColor, 15%);
+  }
+}
+
+.secondary-button {
+  display: inline-block;
+  padding: 15px 30px;
+  background-color: #757575;
+  color: #fff;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  text-align: center;
+
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 1.76px;
+
+  &:hover {
+    background-color: darken(#757575, 5%);
+  }
+
+  &:active {
+    background-color: darken(#757575, 15%);
   }
 }
 
