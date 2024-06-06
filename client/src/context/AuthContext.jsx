@@ -44,6 +44,7 @@ export const AuthProvider = ({ children }) => {
           department: data.user.department,
           manager: data.user.manager,
           position: data.user.position,
+          phone: data.user.contactInfo.phone,
           displayName: `${data.user.middleName} ${data.user.firstName[0]}. ${data.user.lastName[0]}.`,
           permissions: {
             canDownload: data.user.permissions.canDownload,
@@ -77,7 +78,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ jwt, user, login, logout, loading }}>
+    <AuthContext.Provider value={{ jwt, user, login, logout, loading, setUser }}>
       {children}
     </AuthContext.Provider>
   );

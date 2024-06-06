@@ -56,38 +56,43 @@ export const Header = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/" className="header__nav-item">
+                  <Link to="/archive" className="header__nav-item">
                     Архив
                   </Link>
                 </li>
                 <li>
-                  <Link to="/login" className="header__nav-item">
+                  <Link to="/about" className="header__nav-item">
                     О компании
                   </Link>
                 </li>
                 <li>
-                  <Link to="/login" className="header__nav-item">
+                  <Link to="/contacts" className="header__nav-item">
                     Контакты
                   </Link>
                 </li>
               </div>
               {jwt && user ? (
                 <li className="header__nav-user">
-                  <UnionIcon className="header__nav-icon" /> <span className="header__nav-item-text">{user.displayName}</span>
+                  {user.photo ? (
+                    <img src={user.photo} alt="User Photo" className="header__nav-user-photo" />
+                  ) : (
+                      <UnionIcon className="header__nav-user-avatar" />
+                  )}
+                  <span className="header__nav-item-text">{user.displayName}</span>
                   <div className="dropdown-menu">
                     <ul className="dropdown-menu__inner">
                       {user.role === "admin" && (
-                        <Link to="/admin" className="dropdown-menu__item">
+                        <Link to="/admin/statistics" className="dropdown-menu__item">
                           Панель администратора
                         </Link>
                       )}
-                      <Link to="/" className="dropdown-menu__item">
+                      <Link to="/user/personalAccount" className="dropdown-menu__item">
                         Личный кабинет
                       </Link>
-                      <Link to="/" className="dropdown-menu__item">
+                      <Link to="/user/documents" className="dropdown-menu__item">
                         Мои документы
                       </Link>
-                      <Link to="/" className="dropdown-menu__item">
+                      <Link to="/user/settings" className="dropdown-menu__item">
                         Настройки
                       </Link>
                       <li

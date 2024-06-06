@@ -138,6 +138,24 @@ class UserController {
     }
   }
 
+  async updatePhoto(req, res) {
+    const { photo } = req.body;
+
+    try {
+      // Обновление фото пользователя в базе данных
+      const updatedUser = await prisma.user.update({
+        where: { id: req.user.id },
+        data: { photo },
+      });
+
+      // Возвращаем обновленного пользователя в ответе
+      res.json({ user: updatedUser });
+    } catch (error) {
+      console.error("Ошибка при обновлении фото:", error);
+      res.status(500).json({ message: "Ошибка при обновлении фото." });
+    }
+  }
+
   async deleteUser(req, res) {
     const userId = req.params.id;
 

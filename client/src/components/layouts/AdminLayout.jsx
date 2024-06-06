@@ -1,8 +1,8 @@
 import { Link, Outlet } from 'react-router-dom'
 
-import IconStatistics from "../assets/images/icon-statistic.svg?react"
-import IconUsers from "../assets/images/icon-users.svg?react"
-import "../assets/styles/style-components/AdminLayout.scss";
+import IconStatistics from "../../assets/images/icon-statistic.svg?react"
+import IconUsers from "../../assets/images/icon-users.svg?react"
+import "../../assets/styles/style-components/AdminLayout.scss";
 
 function AdminLayout() {
     return (

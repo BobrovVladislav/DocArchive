@@ -40,8 +40,8 @@
       font-size: 20px;
       font-weight: 500;
       &:hover {
-          color: $primaryColor;
-          transition: fill 0.25s ease-in-out;
+        color: $primaryColor;
+        transition: fill 0.25s ease-in-out;
       }
     }
     &-user {
@@ -51,13 +51,20 @@
       font-size: 20px;
       font-weight: 500;
       &:hover {
-          color: $primaryColor;
-          transition: fill 0.25s ease-in-out;
         & .dropdown-menu {
           visibility: visible;
           opacity: 1;
           transition: all 0.25s ease-out;
         }
+      }
+      &-avatar {
+        width: 30px;
+        height: 55px;
+      }
+      &-photo {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
       }
       .dropdown-menu {
         visibility: hidden;

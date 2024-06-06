@@ -1,10 +1,15 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { Layout } from "./components/Layout.jsx";
+import { Layout } from "./components/layouts/Layout.jsx";
 import AuthPage from "./pages/AuthPage.jsx";
-import SignInForm from "./components/SignInForm.jsx";
-import SignUpForm from "./components/SignUpForm.jsx";
+import PersonalAccountLayout from './components/layouts/PersonalAccountLayout.jsx';
+import PersonalAccountDocumentsPage from './pages/personalAccount/PersonalAccountDocumentsPage.jsx';
+import PersonalAccountSettingsPage from './pages/personalAccount/PersonalAccountSettingsPage.jsx';
+import PersonalAccountPage from './pages/personalAccount/PersonalAccountPage.jsx';
 import MainPage from "./pages/MainPage.jsx";
-import AdminLayout from "./components/AdminLayout.jsx";
+import ArchivePage from './pages/ArchivePage.jsx';
+import AboutPage from './pages/AboutPage.jsx';
+import ContactsPage from './pages/ContactsPage.jsx';
+import AdminLayout from "./components/layouts/AdminLayout.jsx";
 import StatisticsPage from "./pages/admin/StatisticsPage.jsx";
 import UserListPage from "./pages/admin/UserListPage.jsx";
 import RegisterUserPage from "./pages/admin/RegisterUserPage.jsx";
@@ -27,6 +32,11 @@ function App() {
       <Routes>
         {jwt && user ? (
           <>
+            <Route element={<PersonalAccountLayout />}>
+              <Route path="/user/personalAccount" element={<PersonalAccountPage />} />
+              <Route path="/user/settings" element={<PersonalAccountSettingsPage />} />
+              <Route path="/user/documents" element={<PersonalAccountDocumentsPage />} />
+            </Route>
             {user.role === "admin" && (
               <Route element={<AdminLayout />}>
                 <Route path="/admin/statistics" element={<StatisticsPage />} />
@@ -36,23 +46,26 @@ function App() {
             )}
           </>
         ) : (
-            <Route element={<AuthPage />}>
-            <Route path="login" element={<SignInForm />} />
-            <Route path="registration" element={<SignUpForm />} />
+            <Route path="login" element={<AuthPage />}>
           </Route>
         )}
         <Route path="/" element={<MainPage />} />
+        <Route path="/archive" element={<ArchivePage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/contacts" element={<ContactsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
 
+        {/* ******************** */}
         <Route element={<AdminLayout />}>
           <Route path="/admin/statistics" element={<StatisticsPage />} />
           <Route path="/admin/users" element={<UserListPage />} />
           <Route path="/admin/users/register" element={<RegisterUserPage />} />
         </Route>
+        {/* ******************** */}
       </Routes>
 
       <ToastContainer position='bottom-right'
-        progressStyle={{ background: "#DB4C40" }} // Стили для прогресс-бара />
+        progressStyle={{ background: "#243FD6" }} // Стили для прогресс-бара />
       />
     </Layout >
   );
