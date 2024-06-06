@@ -1,0 +1,66 @@
+@import "../vars";
+@import "../mixins";
+
+.admin {
+  &__container {
+    margin: 50px 0;
+  }
+  &__inner {
+    display: flex;
+    justify-content: space-between;
+    gap: 25px;
+  }
+  &__nav {
+    width: 265px;
+    height: 200px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 25px;
+    &-title {
+      font-style: italic;
+      font-weight: 400;
+      font-size: 32px;
+      line-height: 62%;
+      text-align: center;
+    }
+    &-border {
+      margin: 25px 0;
+      border-radius: 2px;
+      width: 216px;
+      height: 2px;
+      background: #aaabab;
+    }
+    &-items {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 0 15px;
+    }
+    &-item {
+      display: flex;
+      gap: 10px;
+      font-weight: 500;
+      font-size: 20px;
+      text-align: center;
+      &:hover {
+        * {
+          fill: $primaryColor;
+          color: $primaryColor;
+        }
+      }
+      &-icon {
+        width: 25px;
+        height: 25px;
+        * {
+          fill: #757575;
+        }
+      }
+      &-text {
+        color: #757575;
+      }
+    }
+  }
+  &__content {
+    flex: 1;
+  }
+}

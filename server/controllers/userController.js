@@ -1,11 +1,10 @@
 const prisma = require('../db');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
 
-
-const generateJwt = (id, username, email, role) => {
+const generateJwt = (id, email, role) => {
   return jwt.sign(
-    { id, username, email, role },
+    { id, email, role },
     process.env.SECRET_KEY,
     { expiresIn: '24h' }
   );
@@ -13,13 +12,14 @@ const generateJwt = (id, username, email, role) => {
 
 class UserController {
   async registration(req, res) {
-    const { username, email, password, role } = req.body;
-    if (!username || !email || !password) {
-      return res.status(400).json({ error: 'Некорректные данные' });
-    }
-
     try {
-      const existingUser = await prisma.users.findFirst({
+      console.log(req.body)
+      const { email, password, photo, firstName, middleName, lastName, gender, birthDate, department, manager, position } = req.body;
+      if (!email || !password || !firstName || !middleName || !department || !manager || !position) {
+        return res.status(400).json({ error: 'Некорректные данные' });
+      }
+
+      const existingUser = await prisma.contactInfo.findFirst({
         where: { email },
       });
 
@@ -29,12 +29,20 @@ class UserController {
 
       const hashPassword = await bcrypt.hash(password, 5);
 
-      const newUser = await prisma.users.create({
+      const newUser = await prisma.user.create({
         data: {
-          username,
-          email,
           password: hashPassword,
-          // role: role || "user",
+          photo,
+          firstName,
+          middleName,
+          lastName,
+          gender,
+          birthDate: birthDate ? new Date(birthDate) : undefined,
+          department,
+          manager,
+          position,
+          contactInfo: { create: { email: email } },
+          permissions: { create: { canEdit: false, canDelete: false, canDownload: false } },
         },
       });
 
@@ -49,13 +57,16 @@ class UserController {
     const { email, password } = req.body;
 
     try {
-      const user = await prisma.users.findUnique({
+      const userData = await prisma.contactInfo.findFirst({
         where: { email },
+        include: { user: true }
       });
 
-      if (!user) {
+      if (!userData) {
         return res.status(404).json({ error: 'Пользователь не найден' });
       }
+
+      const user = userData.user;
 
       const comparePassword = bcrypt.compareSync(password, user.password);
 
@@ -63,7 +74,7 @@ class UserController {
         return res.status(400).json({ error: 'Указан неверный пароль' });
       }
 
-      const jwt = generateJwt(user.id, user.username, user.email, user.role);
+      const jwt = generateJwt(user.id, user.email, user.role);
 
       return res.json({ message: "Авторизация прошла успешно", jwt, user });
     } catch (error) {
@@ -73,82 +84,31 @@ class UserController {
   }
 
   async check(req, res) {
-    // Добавляем данные пользователя
-    const user = {
-      id: req.user.id,
-      username: req.user.username,
-      email: req.user.email,
-      role: req.user.role
-    };
-    // Если middleware прошел успешно, токен можно сгенерировать заново, чтобы обновить время жизни
-    const jwt = generateJwt(req.user.id, req.user.username, req.user.email, req.user.role);
+
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      include: {
+        contactInfo: true,
+        permissions: true,
+      },
+    });
+
+    const jwt = generateJwt(req.user.id, req.user.email, req.user.role);
+
     return res.json({ jwt, user });
   }
 
   async getAllUsers(req, res) {
     try {
 
-      let maxProjectsCount = 0;
-      let maxBudget = 0;
-      let topUser = null;
-
-      const allUsers = await prisma.users.findMany({
+      const users = await prisma.user.findMany({
         include: {
-          events: {
-            include: {
-              budget: {
-                select: {
-                  cost: true
-                }
-              }
-            }
-          }
+          permissions: true
         }
-      });
-
-      topUser = allUsers.reduce((maxUser, user) => {
-        const projectsCount = user.events.length;
-        const userMaxBudget = user.events.reduce((userAcc, event) => {
-          const totalCost = event.budget.reduce((costAcc, item) => costAcc + (item.cost || 0), 0);
-          return Math.max(userAcc, totalCost);
-        }, 0);
-
-        if (projectsCount > maxProjectsCount) {
-          maxProjectsCount = projectsCount;
-          maxUser = {
-            ...user,
-            totalProjects: projectsCount,
-          };
-        }
-
-        if (userMaxBudget > maxBudget) {
-          maxBudget = userMaxBudget;
-        }
-
-        return maxUser;
-      }, null);
-
-      const totalEventsCount = allUsers.reduce((acc, user) => acc + user.events.length, 0);
-
-      const usersWithProjectsInfo = allUsers.map((user) => {
-        return {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          events: user.events.length,
-        };
       });
 
       return res.json({
-        users: usersWithProjectsInfo,
-        topUser: {
-          id: topUser.id,
-          username: topUser.username,
-          email: topUser.email,
-          totalProjects: topUser.totalProjects
-        },
-        maxBudget: maxBudget,
-        totalEvents: totalEventsCount,
+        users
       });
     } catch (error) {
       console.error(error);
@@ -156,11 +116,51 @@ class UserController {
     }
   }
 
+  async updatePermission(req, res) {
+    const { userId } = req.params;
+    const { canEdit, canDelete, canDownload } = req.body;
+
+    try {
+      const permissions = await prisma.permission.upsert({
+        where: { userId: parseInt(userId, 10) },
+        update: { canEdit, canDelete, canDownload },
+        create: {
+          userId: parseInt(userId, 10),
+          canEdit: canEdit ?? false,
+          canDelete: canDelete ?? false,
+          canDownload: canDownload ?? false,
+        },
+      });
+      res.json({ permissions });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Ошибка при обновлении прав' });
+    }
+  }
+
+  async updatePhoto(req, res) {
+    const { photo } = req.body;
+
+    try {
+      // Обновление фото пользователя в базе данных
+      const updatedUser = await prisma.user.update({
+        where: { id: req.user.id },
+        data: { photo },
+      });
+
+      // Возвращаем обновленного пользователя в ответе
+      res.json({ user: updatedUser });
+    } catch (error) {
+      console.error("Ошибка при обновлении фото:", error);
+      res.status(500).json({ message: "Ошибка при обновлении фото." });
+    }
+  }
+
   async deleteUser(req, res) {
     const userId = req.params.id;
 
     try {
-      const userToDelete = await prisma.users.findUnique({
+      const userToDelete = await prisma.user.findUnique({
         where: { id: parseInt(userId) }
       });
 
@@ -173,17 +173,12 @@ class UserController {
         return res.status(403).json({ error: 'У вас нет разрешения на удаление админа' });
       }
 
-      // Удаляем пользователя и связанные с ним данные (события гости бюджеты программы)
-      await prisma.users.delete({
+      // Удаляем пользователя
+      await prisma.user.delete({
         where: { id: parseInt(userId) },
         include: {
-          events: {
-            include: {
-              guests: true,
-              program: true,
-              budget: true
-            }
-          }
+          contactInfo: true,
+          permissions: true
         }
       });
 

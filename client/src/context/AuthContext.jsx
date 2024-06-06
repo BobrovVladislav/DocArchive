@@ -33,9 +33,24 @@ export const AuthProvider = ({ children }) => {
         await setJwt(data.jwt);
         await setUser({
           id: data.user.id,
-          username: data.user.username,
-          email: data.user.email,
-          role: data.user.role
+          email: data.user.contactInfo.email,
+          role: data.user.role,
+          photo: data.user.photo,
+          firstName: data.user.firstName,
+          middleName: data.user.middleName,
+          lastName: data.user.lastName,
+          gender: data.user.gender,
+          birthDate: data.user.birthDate,
+          department: data.user.department,
+          manager: data.user.manager,
+          position: data.user.position,
+          phone: data.user.contactInfo.phone,
+          displayName: `${data.user.middleName} ${data.user.firstName[0]}. ${data.user.lastName[0]}.`,
+          permissions: {
+            canDownload: data.user.permissions.canDownload,
+            canEdit: data.user.permissions.canEdit,
+            canDelete: data.user.permissions.canDelete,
+          }
         });
       } catch (error) {
         console.error('Error fetching user data:', error.message);
@@ -63,7 +78,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ jwt, user, login, logout, loading }}>
+    <AuthContext.Provider value={{ jwt, user, login, logout, loading, setUser }}>
       {children}
     </AuthContext.Provider>
   );

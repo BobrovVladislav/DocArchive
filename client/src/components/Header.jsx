@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import Logo from "../../public/logo.svg?react";
 import UnionIcon from "../assets/images/icon-union.svg?react";
 import "../assets/styles/style-components/Header.scss";
 
@@ -38,29 +39,64 @@ export const Header = () => {
     <header className="header">
       <div className="container">
         <div className="header__inner">
-          <Link to="/" className="header__logo">
-            <span className="header__logo-color">Лайф</span>Ивент
+          <Link to="/" className="logo">
+            <div className="logo__icon">
+              <Logo />
+            </div>
+            <div className="logo__title">
+              <span className="logo__title-color">Doc</span>Archive
+            </div>
           </Link>
           <nav>
             <ul className="header__nav">
+              <div className="header__nav-items">
+                <li>
+                  <Link to="/" className="header__nav-item">
+                    Главная
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/archive" className="header__nav-item">
+                    Архив
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/about" className="header__nav-item">
+                    О компании
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/contacts" className="header__nav-item">
+                    Контакты
+                  </Link>
+                </li>
+              </div>
               {jwt && user ? (
-                <li className="header__nav-item">
-                  <UnionIcon className="header__nav-icon" /> <span className="header__nav-item-text">{user.username}</span>
+                <li className="header__nav-user">
+                  {user.photo ? (
+                    <img src={user.photo} alt="User Photo" className="header__nav-user-photo" />
+                  ) : (
+                      <UnionIcon className="header__nav-user-avatar" />
+                  )}
+                  <span className="header__nav-item-text">{user.displayName}</span>
                   <div className="dropdown-menu">
                     <ul className="dropdown-menu__inner">
                       {user.role === "admin" && (
-                        <Link to="/admin" className="dropdown-menu__item">
+                        <Link to="/admin/statistics" className="dropdown-menu__item">
                           Панель администратора
                         </Link>
                       )}
-                      <Link to="/events/create" className="dropdown-menu__item">
-                        Создать
+                      <Link to="/user/personalAccount" className="dropdown-menu__item">
+                        Личный кабинет
                       </Link>
-                      <Link to="/events/all" className="dropdown-menu__item">
-                        Мероприятия
+                      <Link to="/user/documents" className="dropdown-menu__item">
+                        Мои документы
+                      </Link>
+                      <Link to="/user/settings" className="dropdown-menu__item">
+                        Настройки
                       </Link>
                       <li
-                        className="dropdown-menu__item"
+                        className="dropdown-menu__item dropdown-menu__item--logout"
                         onClick={handleLogout}
                       >
                         Выйти
@@ -69,8 +105,10 @@ export const Header = () => {
                   </div>
                 </li>
               ) : (
-                <Link to="/login" className="header__nav-item">
-                  <UnionIcon className="header__nav-icon" /> <span className="header__nav-item-text">Войти</span>
+                <Link to="/login" className="header__nav-button">
+                  <button className="main-button">
+                    Войти
+                  </button>
                 </Link>
               )}
             </ul>
@@ -94,7 +132,7 @@ export const Header = () => {
                   {jwt && user ? (
                     <div className="header__mobile-inner">
                       <li className="header__mobile-item header__mobile-item--name">
-                        {user.username}
+                        {user.displayName}
                       </li>
                       <hr className="header__mobile-divider" />
                       {user.role === "admin" && (
