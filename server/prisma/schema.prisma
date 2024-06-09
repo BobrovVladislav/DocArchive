@@ -23,6 +23,7 @@ model User {
   position    String
   contactInfo ContactInfo?
   permissions Permission? 
+  documents   Document[]
 }
 
 model ContactInfo {
@@ -42,3 +43,21 @@ model Permission {
   canDownload Boolean @default(false)
   user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model Document {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique @default(uuid())
+  name        String
+  type        String
+  authorId    Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  size        Int
+  status      String?
+  description String?
+  metadata    Json?
+  url         String
+
+  author      User     @relation(fields: [authorId], references: [id])
+}
+

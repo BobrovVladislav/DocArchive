@@ -13,12 +13,19 @@ import AdminLayout from "./components/layouts/AdminLayout.jsx";
 import StatisticsPage from "./pages/admin/StatisticsPage.jsx";
 import UserListPage from "./pages/admin/UserListPage.jsx";
 import RegisterUserPage from "./pages/admin/RegisterUserPage.jsx";
+import AddDocumentsPage from './pages/AddDocumentsPage.jsx';
+import DocumentDetailsPage  from './pages/DocumentDetailsPage.jsx';
+import ViewDocument from './components/ViewDocument.jsx';
+import HistoryDocument from './components/HistoryDocument.jsx';
+import DiscussionDocument from './components/DiscussionDocument.jsx';
+
 import { Loader } from "./components/Loader.jsx";
 
 import { useAuth } from "./context/AuthContext.jsx";
 
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
+
 
 function App() {
   const { jwt, user, loading } = useAuth();
@@ -46,11 +53,17 @@ function App() {
             )}
           </>
         ) : (
-            <Route path="login" element={<AuthPage />}>
+          <Route path="login" element={<AuthPage />}>
           </Route>
         )}
         <Route path="/" element={<MainPage />} />
         <Route path="/archive" element={<ArchivePage />} />
+        <Route path="/archive/add-documents" element={<AddDocumentsPage />} />
+        <Route element={<DocumentDetailsPage />} > 
+          <Route path="/archive/:id/view" element={<ViewDocument />} />
+          <Route path="/archive/:id/history" element={<HistoryDocument />} />
+          <Route path="/archive/:id/discussion" element={<DiscussionDocument />} />
+        </Route>
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contacts" element={<ContactsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
