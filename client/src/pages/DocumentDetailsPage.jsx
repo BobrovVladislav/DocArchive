@@ -1,26 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Link, Outlet, useParams } from 'react-router-dom'
+import { useAuth } from "../context/AuthContext";
+import { useDocument } from '../context/DocumentContext';
+import { Loader } from "../components/Loader";
 
 function DocumentDetailsPage() {
+    const { getDocument, document, loading } = useDocument();
+    const { jwt } = useAuth();
     const { id } = useParams();
-    const [document, setDocument] = useState(null);
 
     useEffect(() => {
-        const fetchDocument = async () => {
-            try {
-                const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/documents/${id}`);
-                const data = await response.json();
-                setDocument(data);
-            } catch (error) {
-                console.error('Ошибка при получении документа:', error);
-            }
-        };
-
-        fetchDocument();
+        getDocument(id, jwt);
     }, [id]);
 
-    if (!document) {
-        return <div>Загрузка...</div>;
+    if (loading) {
+        return <Loader />
+    }
+
+    if (!document && !loading) {
+        return <p>Ничего не найдено</p>;
     }
 
     return (
@@ -46,7 +44,7 @@ function DocumentDetailsPage() {
                                 <Link to={`/archive/${document.id}/history`} className="document__tab-text">ИСТОРИЯ ИЗМЕНЕНИЙ</Link>
                             </div>
                             <div className={`document__tab ${location.pathname === `/archive/${document.id}/discussion` ? 'document__tab--active' : ''}`}>
-                                <Link to={`/archive/${document.id}/discussion`} className="document__tab-text">ОБСУЖДЕНИЕ</Link>
+                                <Link to={`/archive/${document.id}/discussion`} className="document__tab-text">ОБСУЖДЕНИЕ ({document.messages.length})</Link>
                             </div>
                         </div>
                     </div>

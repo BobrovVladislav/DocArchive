@@ -1,32 +1,17 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+// import { useAuth } from "../context/AuthContext";
+import { useDocument } from "../context/DocumentContext";
 
 function ViewDocument() {
-    const { id } = useParams();
-    const [document, setDocument] = useState(null);
-
-    useEffect(() => {
-        const fetchDocument = async () => {
-            try {
-                const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/documents/${id}`);
-                const data = await response.json();
-                setDocument(data);
-            } catch (error) {
-                console.error('Ошибка при получении документа:', error);
-            }
-        };
-
-        fetchDocument();
-    }, [id]);
-
-    if (!document) {
-        return <div>Загрузка...</div>;
-    }
+    // const { jwt } = useAuth();
+    const { document } = useDocument();
 
     return (
         <div className="document-view">
-            <h1>{document.name}</h1>
-            <h1>{document.url}</h1>
+            {document.type === 'application/pdf' ? (
+                <iframe src={document.histories[0].url} width="100%" height="600px"></iframe>
+            ) : (
+                <iframe src={`https://docs.google.com/viewer?url=${encodeURIComponent(document.histories[0].url)}&embedded=true`} width="100%" height="600px"></iframe>
+            )}
         </div>
     );
 }

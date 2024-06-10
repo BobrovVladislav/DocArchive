@@ -143,28 +143,31 @@ function ArchivePage() {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredDocuments.map(doc => (
-                        <tr key={doc.id}>
-                            <td>
-                                <input
-                                    type="checkbox"
-                                    checked={selectedDocuments.includes(doc.id)}
-                                    onChange={() => handleSelect(doc.id)}
-                                />
-                            </td>
-                            <td>{formatFileType(doc.type)}</td>
-                            <td>{doc.name}</td>
-                            <td>{doc.author.middleName} {doc.author.firstName[0]}. {doc.author.lastName[0]}.</td>
-                            <td>{new Date(doc.updatedAt).toLocaleDateString()}</td>
-                            <td>{formatFileSize(doc.size)}</td>
-                            <td>{doc.status}</td>
-                            <td>
-                                <button onClick={() => handleView(doc.id)}>Просмотр</button>
-                                <button onClick={() => handleDownload(doc.url)}>Скачать</button>
-                                <button onClick={() => handleDelete(doc.id)}>Удалить</button>
-                            </td>
-                        </tr>
-                    ))}
+                    {filteredDocuments.map(doc => {
+                        const latestVersion = doc.histories[0];
+                        return (
+                            <tr key={doc.id}>
+                                <td>
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedDocuments.includes(doc.id)}
+                                        onChange={() => handleSelect(doc.id)}
+                                    />
+                                </td>
+                                <td>{formatFileType(doc.type)}</td>
+                                <td>{doc.name}</td>
+                                <td>{doc.author.middleName} {doc.author.firstName[0]}. {doc.author.lastName[0]}.</td>
+                                <td>{new Date(latestVersion.createdAt).toLocaleDateString()}</td>
+                                <td>{formatFileSize(latestVersion.size)}</td>
+                                <td>{doc.status}</td>
+                                <td>
+                                    <button onClick={() => handleView(doc.id)}>Просмотр</button>
+                                    <button onClick={() => handleDownload(latestVersion.url)}>Скачать</button>
+                                    <button onClick={() => handleDelete(doc.id)}>Удалить</button>
+                                </td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
             <style jsx>{`
