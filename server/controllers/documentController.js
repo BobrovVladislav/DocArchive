@@ -78,6 +78,21 @@ class DocumentController {
         }
     }
 
+    async updateDocument(req, res) {
+        const { id } = req.params;
+        const updateData = req.body;
+
+        try {
+            const updatedDocument = await prisma.document.update({
+                where: { id: parseInt(id, 10) },
+                data: updateData,
+            });
+            res.status(200).json(updatedDocument);
+        } catch (error) {
+            console.error('Ошибка при обновлении документа:', error);
+            res.status(500).json({ error: 'Ошибка при обновлении документа' });
+        }
+    }
 
     async deleteDocument(req, res) {
         const { id } = req.params;

@@ -4,7 +4,7 @@
 @import "./_fonts.scss";
 
 * {
-  font-family: rubik;
+  font-family: "Roboto", sans-serif;
   outline: none;
 }
 
@@ -65,14 +65,11 @@ h1 {
 }
 
 h2 {
-  font-size: 30px;
-  font-style: normal;
   font-weight: 500;
-  letter-spacing: 3.3px;
-  margin-bottom: 25px;
-  @include mobile {
-    text-align: center;
-  }
+  font-size: 36px;
+  color: #272727;
+  margin-bottom: 40px;
+  text-align: center;
 }
 
 .logo {
@@ -122,6 +119,11 @@ h2 {
 
   &:active {
     background-color: darken($primaryColor, 15%);
+  }
+
+  &--2 {
+    border-radius: 15px;
+    padding: 16px 50px;
   }
 }
 

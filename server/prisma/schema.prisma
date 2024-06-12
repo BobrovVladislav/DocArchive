@@ -53,7 +53,7 @@ model Document {
   type        String
   authorId    Int
   description String?
-  metadata    Json?
+  tags        String[]
   status      String?
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt

@@ -60,7 +60,7 @@ function RegisterUserPage() {
                     <div className="register__form-section-title">Идентификация</div>
                     <div className="register__form-Icontainer">
                         <label className="register__form-label" htmlFor='email'>Email*</label>
-                        <input className="register__form-input" type="email" id="email" name='email' value={formData.email} onChange={handleChange} placeholder='123@gmail.com' required />
+                        <input className="register__form-input" type="email" id="email" name='email' value={formData.email} onChange={handleChange} placeholder='mail@domain.ru' required />
                     </div>
                     <div className="register__form-Icontainer">
                         <label className="register__form-label" htmlFor='password'>Пароль*</label>

@@ -49,7 +49,7 @@
     }
   }
   &__title {
-    width: 50%;
+    width: 100%;
     display: flex;
     justify-content: center;
     color: #77878f;
@@ -109,12 +109,6 @@
     background: #fff;
     padding: 10px 15px;
   }
-  &__select {
-    appearance: none;
-    background-image: url("../../images/IconSelect.svg");
-    background-repeat: no-repeat;
-    background-position: calc(100% - 15px) center;
-  }
   &__button {
     display: flex;
     padding: 0px 24px;
@@ -143,49 +137,6 @@
 
     &:active {
       background-color: darken($primaryColor, 15%);
-    }
-    &-google {
-      display: flex;
-      padding: 12px 15px;
-      align-items: flex-start;
-      border-radius: 2px;
-      border: 1px solid #e4e7e9;
-      background: #fff;
-      cursor: pointer;
-
-      color: #475156;
-      text-align: center;
-      font-size: 14px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 20px;
-      &-text {
-        flex-grow: 1; /* Это заставит текст занимать всю доступную ширину, выталкивая изображение в начало */
-        text-align: center; /* Выравнивание текста по центру */
-      }
-    }
-  }
-  &__description {
-    color: #475156;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 20px;
-    margin-top: 20px;
-  }
-  &__divider {
-    display: flex;
-    align-items: center;
-    margin: 15px 0;
-    &-line {
-      flex: 1;
-      height: 1px;
-      background-color: #e4e7e9;
-      border: none;
-      margin: 0 10px;
-    }
-    &-text {
-      color: #77878f;
     }
   }
 }

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
-
 function ArchivePage() {
     const [documents, setDocuments] = useState([]);
     const [selectedDocuments, setSelectedDocuments] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [searchTags, setSearchTags] = useState([]);
     const [filterStatus, setFilterStatus] = useState('');
     const navigate = useNavigate();
 
@@ -69,10 +69,14 @@ function ArchivePage() {
         setSearchTerm(event.target.value);
     };
 
+    const handleTagSearch = (event) => {
+        const tags = event.target.value.trim();
+        setSearchTags(tags ? tags.split(',').map(tag => tag.trim()) : []);
+    };
+
     const handleFilterStatus = (event) => {
         setFilterStatus(event.target.value);
     };
-
 
     const fileTypeMap = {
         'application/pdf': 'PDF',
@@ -80,7 +84,6 @@ function ArchivePage() {
         'application/msword': 'DOC',
         'image/jpeg': 'JPEG',
         'image/png': 'PNG'
-        // Добавьте другие типы файлов при необходимости
     };
 
     const formatFileType = (mimeType) => {
@@ -98,13 +101,20 @@ function ArchivePage() {
     };
 
     const filteredDocuments = documents.filter(doc => {
-        return (
-            (doc.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                doc.author.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                doc.author.lastName.toLowerCase().includes(searchTerm.toLowerCase())) &&
-            (filterStatus ? doc.status === filterStatus : true)
+        const searchTermLower = searchTerm.toLowerCase();
+        const matchesSearchTerm = (
+            doc.name.toLowerCase().includes(searchTermLower) ||
+            doc.author.firstName.toLowerCase().includes(searchTermLower) ||
+            doc.author.lastName.toLowerCase().includes(searchTermLower)
         );
+
+        const matchesTags = searchTags.length === 0 || // Если теги не выбраны, пропустить проверку
+            searchTags.every(tag => doc.tags && doc.tags.includes(tag));
+
+        return matchesSearchTerm && matchesTags && (filterStatus ? doc.status === filterStatus : true);
     });
+
+
 
     return (
         <div className="container">
@@ -115,6 +125,12 @@ function ArchivePage() {
                     placeholder="Поиск..."
                     value={searchTerm}
                     onChange={handleSearch}
+                />
+                <input
+                    type="text"
+                    placeholder="Поиск по тегам (разделите запятыми)..."
+                    value={searchTags.join(',')}
+                    onChange={handleTagSearch}
                 />
                 <select value={filterStatus} onChange={handleFilterStatus}>
                     <option value="">Все</option>
