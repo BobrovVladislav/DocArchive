@@ -2,8 +2,11 @@ import { useState } from 'react';
 import { useAuth } from "../context/AuthContext";
 import { useDocument } from "../context/DocumentContext";
 
+import IconAvatar from "../assets/images/icon-union.svg?react";
+import "../assets/styles/style-components/DiscussionDocument.scss";
+
 function DiscussionDocument() {
-    const { jwt } = useAuth();
+    const { jwt, user } = useAuth();
     const { document, getDocument } = useDocument();
     const [newMessage, setNewMessage] = useState('');
 
@@ -40,56 +43,51 @@ function DiscussionDocument() {
     };
 
     return (
-        <div className="discussion-container">
-            <h1>Обсуждение документа</h1>
-            <div className="messages-list">
+        <div className="discussion">
+            <div className="discussion__messages-list">
                 {document.messages.map((message) => (
-                    <div key={message.id} className="message-item">
-                        <p><strong>{message.user.middleName} {message.user.firstName}</strong></p>
-                        <p>{new Date(message.createdAt).toLocaleString()}</p>
-                        <p>{message.content}</p>
+                    <div key={message.id} className="discussion__message-item">
+                        <div className="discussion__message-item-user">
+                            <div className="discussion__message-item-user-img">
+                                {message.user.photo ? (
+                                    <img src={message.user.photo} alt="User Photo" className="discussion__message-item-user-img" />
+                                ) : (
+                                    <IconAvatar className="discussion__message-item-user-img" />
+                                )}
+                            </div>
+                            <div className="discussion__message-item-user-info">
+                                <div className='discussion__message-item-user-name'>{message.user.middleName} {message.user.firstName}</div>
+                                <div className='discussion__message-item-user-date'>{new Date(message.createdAt).toLocaleDateString()}</div>
+                            </div>
+                        </div>
+                        <div className="discussion__message-item-content">
+                            {message.content}
+                        </div>
                     </div>
                 ))}
             </div>
-            <form onSubmit={handleNewMessageSubmit} className="new-message-form">
-                <textarea
-                    value={newMessage}
-                    onChange={handleNewMessageChange}
-                    placeholder="Введите ваше сообщение"
-                ></textarea>
-                <button type="submit">Отправить</button>
+            <form onSubmit={handleNewMessageSubmit} className="discussion__form">
+                <div className="discussion__form-inner">
+                    <div className="discussion__form-user">
+                        {user.photo ? (
+                            <img src={user.photo} alt="User Photo" className="discussion__message-item-user-img" />
+                        ) : (
+                            <IconAvatar className="discussion__message-item-user-img" />
+                        )}
+                        <div className='discussion__message-item-user-name'>{user.middleName} {user.firstName}</div>
+                    </div>
+                    <textarea
+                        className='discussion__form-message'
+                        value={newMessage}
+                        onChange={handleNewMessageChange}
+                        placeholder="Ваше сообщение..."
+                    ></textarea>
+                </div>
+                <div className="discussion__form-btn">
+                    <button className='main-button main-button--2' type="submit">Отправить</button>
+                </div>
+
             </form>
-            <style jsx>{`
-                .discussion-container {
-                    width: 80%;
-                    margin: 0 auto;
-                    padding: 20px;
-                }
-                .messages-list {
-                    margin-bottom: 20px;
-                }
-                .message-item {
-                    border-bottom: 1px solid #ddd;
-                    padding: 10px 0;
-                }
-                .message-item p {
-                    margin: 5px 0;
-                }
-                .new-message-form {
-                    display: flex;
-                    flex-direction: column;
-                }
-                .new-message-form textarea {
-                    padding: 10px;
-                    margin-bottom: 10px;
-                    resize: vertical;
-                    height: 100px;
-                }
-                .new-message-form button {
-                    align-self: flex-end;
-                    padding: 10px 20px;
-                }
-            `}</style>
         </div>
     );
 }

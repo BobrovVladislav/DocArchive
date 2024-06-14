@@ -9,7 +9,7 @@ function AboutPage() {
                     <h2 className="about__main-title">Негосударственное экспертное учреждение &quot;ГОС-Эксперт&quot;</h2>
                     <div className="about__main-inner">
                         <div className="about__main-inner-image">
-                            <img src="../../public/images/company.png" alt="" className="about__main-inner-img" />
+                            <img src="/images/company.png" alt="" className="about__main-inner-img" />
                         </div>
                         <div className="about__main-inner-info">
                             <p className="about__main-inner-text">Экспертное учреждение «ГОС-Эксперт» было зарегистрировано в феврале 2003 года и, за прошедшие с момента основания годы, стало одним из ведущих в Центрально-Черноземном регионе.</p>

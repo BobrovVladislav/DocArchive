@@ -1,0 +1,39 @@
+@import "../vars";
+@import "../mixins";
+
+.statistics {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  &__item {
+    width: 30%;
+    height: 285px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 25px;
+    &-icon {
+      height: 35px;
+      width: 20px;
+    }
+    &-name {
+      font-family: "Montserrat", sans-serif;
+      margin-top: 20px;
+      font-weight: 600;
+      font-size: 24px;
+      color: #333;
+    }
+    &-value {
+      font-family: "Montserrat", sans-serif;
+      margin-top: 30px;
+      font-size: 80px;
+      line-height: 100%;
+      font-weight: 100;
+      margin-top: auto;
+      text-align: right;
+      color: #243fd6;
+    }
+  }
+}

@@ -72,7 +72,7 @@ function MainPage() {
               <p className="about__text-paragraph">DocArchive - это инновационный веб-сервис для управления документацией, разработанный с учетом потребностей экспертных организаций. Наш сервис позволяет вам легко организовать все ваши документы.</p>
               <p className="about__text-paragraph">DocArchive создан для того, чтобы помочь организациям справляться с растущим объемом документации, обеспечивая безопасность данных и простоту использования. Мы стремимся сделать вашу работу с документами максимально удобной и эффективной.</p>
             </div>
-            <img className="about__image" src="../../public/images/main-about.png" alt="" />
+            <img className="about__image" src="/images/main-about.png" alt="image-about" />
           </div>
         </div>
       </section>
@@ -83,7 +83,7 @@ function MainPage() {
             <div className="advantages__list">
               <div className="advantages__list-item">
                 <div className="advantages__list-item-img">
-                  <img src="../../public/images/advantages/advantages1.png" alt="advantages1" />
+                  <img src="/images/advantages/advantages1.png" alt="advantages1" />
                 </div>
                 <div className="advantages__list-item-info">
                   <h4 className="advantages__list-item-info-title">Совместная работа</h4>
@@ -92,7 +92,7 @@ function MainPage() {
               </div>
               <div className="advantages__list-item">
                 <div className="advantages__list-item-img">
-                  <img src="../../public/images/advantages/advantages2.png" alt="advantages2" />
+                  <img src="/images/advantages/advantages2.png" alt="advantages2" />
                 </div>
                 <div className="advantages__list-item-info">
                   <h4 className="advantages__list-item-info-title">Простота использования</h4>
@@ -101,7 +101,7 @@ function MainPage() {
               </div>
               <div className="advantages__list-item">
                 <div className="advantages__list-item-img">
-                  <img src="../../public/images/advantages/advantages3.png" alt="advantages3" />
+                  <img src="/images/advantages/advantages3.png" alt="advantages3" />
                 </div>
                 <div className="advantages__list-item-info">
                   <h4 className="advantages__list-item-info-title">Мобильный доступ</h4>

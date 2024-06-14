@@ -1,9 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { Link } from 'react-router-dom'
+
+import IconFileDownload from "../assets/images/users/download.svg?react";
+import IconEye from "../assets/images/icon-eye.svg?react";
+import IconFileDelete from "../assets/images/users/basket.svg?react";
+import IconDots from "../assets/images/dots.svg?react";
+import IconSearch from "../assets/images/icon-search.svg?react";
+import IconUpload from "../assets/images/icon-upload.svg?react";
+import "../assets/styles/style-pages/archive-page.scss";
 
 function ArchivePage() {
+    const { jwt } = useAuth();
     const [documents, setDocuments] = useState([]);
     const [selectedDocuments, setSelectedDocuments] = useState([]);
+    const [perPage, setPerPage] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchTags, setSearchTags] = useState([]);
     const [filterStatus, setFilterStatus] = useState('');
@@ -12,7 +24,11 @@ function ArchivePage() {
     useEffect(() => {
         const fetchDocuments = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/documents/all`);
+                const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/documents/all`, {
+                    headers: {
+                        Authorization: `Bearer ${jwt}`
+                    }
+                });
                 const data = await response.json();
                 setDocuments(data);
             } catch (error) {
@@ -27,10 +43,14 @@ function ArchivePage() {
         navigate(`/archive/${id}/view`);
     };
 
-    const handleDownload = (url) => {
+    const handleDownload = (url, fileName) => {
         const link = document.createElement('a');
         link.href = url;
-        link.download = true;
+        link.download = fileName;
+
+        link.setAttribute('download', '');
+        link.setAttribute('target', '_blank');
+        
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -40,6 +60,9 @@ function ArchivePage() {
         try {
             const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/documents/${id}`, {
                 method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${jwt}`
+                }
             });
             if (response.ok) {
                 setDocuments(documents.filter(doc => doc.id !== id));
@@ -63,6 +86,10 @@ function ArchivePage() {
         } else {
             setSelectedDocuments(documents.map(doc => doc.id));
         }
+    };
+
+    const handlePerPageChange = (e) => {
+        setPerPage(Number(e.target.value));
     };
 
     const handleSearch = (event) => {
@@ -104,115 +131,138 @@ function ArchivePage() {
         const searchTermLower = searchTerm.toLowerCase();
         const matchesSearchTerm = (
             doc.name.toLowerCase().includes(searchTermLower) ||
-            doc.author.firstName.toLowerCase().includes(searchTermLower) ||
-            doc.author.lastName.toLowerCase().includes(searchTermLower)
+            doc.histories[0].author.firstName.toLowerCase().includes(searchTermLower) ||
+            doc.histories[0].author.middleName.toLowerCase().includes(searchTermLower) ||
+            doc.histories[0].author.lastName.toLowerCase().includes(searchTermLower)
         );
 
         const matchesTags = searchTags.length === 0 || // Если теги не выбраны, пропустить проверку
             searchTags.every(tag => doc.tags && doc.tags.includes(tag));
 
-        return matchesSearchTerm && matchesTags && (filterStatus ? doc.status === filterStatus : true);
+        return matchesSearchTerm && matchesTags && (filterStatus ? doc.histories[0].status === filterStatus : true);
     });
 
-
+    const getStatusLabel = (status) => {
+        switch (status) {
+            case 'new':
+                return 'Новое';
+            case 'progress':
+                return 'В процессе';
+            case 'review':
+                return 'На рассмотрении';
+            case 'correction':
+                return 'Исправления';
+            case 'rejected':
+                return 'Отклонено';
+            case 'approved':
+                return 'Утверждено';
+            default:
+                return status;
+        }
+    };
 
     return (
         <div className="container">
-            <h1>Список документов</h1>
-            <div className="controls">
-                <input
-                    type="text"
-                    placeholder="Поиск..."
-                    value={searchTerm}
-                    onChange={handleSearch}
-                />
-                <input
-                    type="text"
-                    placeholder="Поиск по тегам (разделите запятыми)..."
-                    value={searchTags.join(',')}
-                    onChange={handleTagSearch}
-                />
-                <select value={filterStatus} onChange={handleFilterStatus}>
-                    <option value="">Все</option>
-                    <option value="новое">Новые</option>
-                    <option value="processing">Исправления</option>
-                    <option value="completed">Завершен</option>
-                </select>
-            </div>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>
-                            <input
-                                type="checkbox"
-                                checked={selectedDocuments.length === documents.length}
-                                onChange={handleSelectAll}
+            <h1 className='archive__title'>Электронный архив</h1>
+            <div className="archive">
+                <div className="archive__controls">
+                    <div className="archive__controls-top">
+                        <div className="archive__controls-top-pagination">
+                            <label>ПОКАЗАТЬ</label>
+                            <input className='archive__controls-top-input'
+                                type="number"
+                                value={perPage}
+                                onChange={handlePerPageChange}
+                                min={1}
+                                step={1}
                             />
-                        </th>
-                        <th>Тип файла</th>
-                        <th>Название</th>
-                        <th>Автор</th>
-                        <th>Дата обновления</th>
-                        <th>Размер</th>
-                        <th>Статус</th>
-                        <th>Действия</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredDocuments.map(doc => {
-                        const latestVersion = doc.histories[0];
-                        return (
-                            <tr key={doc.id}>
-                                <td>
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedDocuments.includes(doc.id)}
-                                        onChange={() => handleSelect(doc.id)}
-                                    />
-                                </td>
-                                <td>{formatFileType(doc.type)}</td>
-                                <td>{doc.name}</td>
-                                <td>{doc.author.middleName} {doc.author.firstName[0]}. {doc.author.lastName[0]}.</td>
-                                <td>{new Date(latestVersion.createdAt).toLocaleDateString()}</td>
-                                <td>{formatFileSize(latestVersion.size)}</td>
-                                <td>{doc.status}</td>
-                                <td>
-                                    <button onClick={() => handleView(doc.id)}>Просмотр</button>
-                                    <button onClick={() => handleDownload(latestVersion.url)}>Скачать</button>
-                                    <button onClick={() => handleDelete(doc.id)}>Удалить</button>
-                                </td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
-            <style jsx>{`
-                .controls {
-                    margin-bottom: 20px;
-                }
-                .controls input,
-                .controls select {
-                    margin-right: 10px;
-                    padding: 5px;
-                }
-                .table {
-                    width: 100%;
-                    border-collapse: collapse;
-                }
-                .table th, .table td {
-                    border: 1px solid #ddd;
-                    padding: 8px;
-                }
-                .table th {
-                    padding-top: 12px;
-                    padding-bottom: 12px;
-                    text-align: left;
-                    background-color: #f2f2f2;
-                }
-                .table button {
-                    margin-right: 5px;
-                }
-            `}</style>
+                            <label>ДОКУМЕНТОВ</label>
+                        </div>
+                        <Link to="/archive/add-documents" className="archive__controls-btn"><IconUpload />Загрузить файл</Link>
+                    </div>
+                    <div className="archive__controls-bottom">
+                        <div className='archive__controls-bottom-search-wrapper'>
+                            <IconSearch className="archive__controls-bottom-search-icon" />
+                            <input className='archive__controls-bottom-search'
+                                type="text"
+                                placeholder="Введите название файла"
+                                value={searchTerm}
+                                onChange={handleSearch}
+                            />
+                        </div>
+                        <input
+                            type="text"
+                            className='archive__controls-bottom-tags'
+                            placeholder="Поиск по тегам (разделите запятыми)"
+                            value={searchTags.join(',')}
+                            onChange={handleTagSearch}
+                        />
+                        <select value={filterStatus} onChange={handleFilterStatus}>
+                            <option value="" disabled>Выберите статус</option>
+                            <option value="">Все</option>
+                            <option value="new">Новые</option>
+                            <option value="progress">В работе</option>
+                            <option value="review">На рассмотрении</option>
+                            <option value="correction">Исправления</option>
+                            <option value="rejected">Отклоненные</option>
+                            <option value="approved">Утвержденные</option>
+                        </select>
+                    </div>
+                </div>
+                <table className="archive__table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input
+                                    type="checkbox"
+                                    checked={selectedDocuments.length === documents.length}
+                                    onChange={handleSelectAll}
+                                />
+                            </th>
+                            <th className='archive__table-type'>Тип файла</th>
+                            <th className='archive__table-name'>Название</th>
+                            <th className='archive__table-author'>Автор</th>
+                            <th className='archive__table-date'>Дата обновления</th>
+                            <th className='archive__table-size'>Размер</th>
+                            <th className='archive__table-status'>Статус</th>
+                            <th className='archive__table-actions'><IconDots /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredDocuments.slice(0, perPage).map(doc => {
+                            const latestVersion = doc.histories[0];
+                            const statusClass = `status-${latestVersion.status.replace('_', '-')} status`;
+                            return (
+                                <tr key={doc.id}>
+                                    <td>
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedDocuments.includes(doc.id)}
+                                            onChange={() => handleSelect(doc.id)}
+                                        />
+                                    </td>
+                                    <td className='archive__table-type'>{formatFileType(doc.type)}</td>
+                                    <td className='archive__table-name'>{doc.name}</td>
+                                    <td className='archive__table-author'>{latestVersion.author.middleName} {latestVersion.author.firstName[0]}. {latestVersion.author.lastName[0]}.</td>
+                                    <td className='archive__table-date'>{new Date(latestVersion.createdAt).toLocaleDateString()}</td>
+                                    <td className='archive__table-size'>{formatFileSize(latestVersion.size)}</td>
+                                    <td className='archive__table-status'> <div className={statusClass}>{getStatusLabel(latestVersion.status)}</div> </td>
+                                    <td className='archive__table-actions'>
+                                        <button className="func-button" onClick={() => handleView(doc.id)}><IconEye /></button>
+                                        <button className="func-button" onClick={() => handleDownload(latestVersion.url, doc.name)}><IconFileDownload /></button>
+                                        <button className="func-button" onClick={() => handleDelete(doc.id)}><IconFileDelete /></button>
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+
+                {/* Информация о количестве записей */}
+                <div className="archive__records">
+                    Показано 1-{Math.min(perPage, documents.length)} из {documents.length} записей
+                </div>
+            </div>
         </div>
     );
 }

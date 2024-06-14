@@ -3,23 +3,17 @@ const prisma = require('../db');
 class DocumentController {
 
     async addDocuments(req, res) {
-        const { name, type, authorId, description, status, size, url } = req.body;
+        const { name, type, size } = req.body;
 
         try {
             const document = await prisma.document.create({
                 data: {
                     name,
                     type,
-                    authorId,
-                    description,
-                    status,
                     histories: {
                         create: {
-                            version: 1,
-                            authorId,
-                            url,
+                            authorId: req.user.id,
                             size,
-                            status
                         }
                     }
                 },
@@ -39,10 +33,12 @@ class DocumentController {
         try {
             const documents = await prisma.document.findMany({
                 include: {
-                    author: true,
                     histories: {
                         orderBy: { version: 'desc' },
                         take: 1,
+                        include: {
+                            author: true,
+                        },
                     },
                 },
             });
@@ -60,9 +56,12 @@ class DocumentController {
             const document = await prisma.document.findUnique({
                 where: { id: parseInt(id, 10) },
                 include: {
-                    author: true,
                     histories: {
-                        include: { author: true },
+                        include: {
+                            author: {
+                                include: { contactInfo: true }
+                            }
+                        },
                         orderBy: { version: 'desc' },
                     },
                     messages: {
@@ -83,11 +82,56 @@ class DocumentController {
         const updateData = req.body;
 
         try {
-            const updatedDocument = await prisma.document.update({
-                where: { id: parseInt(id, 10) },
-                data: updateData,
+            const result = await prisma.$transaction(async (prisma) => {
+                const updateDocumentData = {};
+                const updateVersionData = {};
+
+                // Формируем данные для обновления документа
+                if (updateData.name) updateDocumentData.name = updateData.name;
+                if (updateData.type) updateDocumentData.type = updateData.type;
+                if (updateData.description) updateDocumentData.description = updateData.description;
+                if (updateData.tags) updateDocumentData.tags = updateData.tags;
+
+                // Обновляем документ, если есть что обновлять
+                if (Object.keys(updateDocumentData).length > 0) {
+                    await prisma.document.update({
+                        where: { id: parseInt(id, 10) },
+                        data: updateDocumentData,
+                    });
+                }
+
+                // Получаем последнюю версию документа
+                const latestVersion = await prisma.documentVersion.findFirst({
+                    where: { documentId: parseInt(id, 10) },
+                    orderBy: { createdAt: 'desc' },
+                });
+
+                // Формируем данные для обновления версии документа
+                if (updateData.histories.version) updateVersionData.version = updateData.histories.version;
+                if (updateData.histories.url) updateVersionData.url = updateData.histories.url;
+                if (updateData.histories.size) updateVersionData.size = updateData.histories.size;
+                if (updateData.histories.status) updateVersionData.status = updateData.histories.status;
+
+                // Обновляем версию документа, если есть что обновлять
+                if (latestVersion && Object.keys(updateVersionData).length > 0) {
+                    await prisma.documentVersion.update({
+                        where: { id: latestVersion.id },
+                        data: updateVersionData,
+                    });
+                }
+
+                // Получаем обновленный документ вместе с его версиями
+                const documentWithVersions = await prisma.document.findUnique({
+                    where: { id: parseInt(id, 10) },
+                    include: {
+                        histories: true,
+                    },
+                });
+
+                return documentWithVersions || { message: 'Документ не был обновлен, так как не было передано данных для обновления.' };
             });
-            res.status(200).json(updatedDocument);
+
+            res.status(200).json(result);
         } catch (error) {
             console.error('Ошибка при обновлении документа:', error);
             res.status(500).json({ error: 'Ошибка при обновлении документа' });

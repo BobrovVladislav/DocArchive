@@ -3,7 +3,7 @@
 
 .about {
   &__main {
-    margin: 50px 0;
+    margin: 40px 0;
     &-title {
       font-weight: 500;
       font-size: 30px;
@@ -12,6 +12,7 @@
     &-inner {
       display: flex;
       justify-content: space-between;
+      gap: 50px;
       align-items: center;
       &-img {
         height: 350px;

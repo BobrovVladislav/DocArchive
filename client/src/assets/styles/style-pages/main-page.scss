@@ -6,8 +6,7 @@
   &__inner {
     padding: 50px 0 50px 35px;
     position: relative;
-    background: url(../../../../public/images/welcome.png) center center/cover
-      no-repeat;
+    background: url(/images/welcome.png) center center/cover no-repeat;
     background-color: #273895;
   }
   &__info {
@@ -17,7 +16,7 @@
       text-align: left;
       text-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
       font-weight: 400;
-      font-size: 32px;
+      font-size: 36px;
       line-height: 137%;
     }
     &-text {
@@ -35,6 +34,9 @@
 
 .opportunities {
   margin-bottom: 30px;
+  h2 {
+    text-align: center;
+  }
   &__list {
     display: flex;
     flex-wrap: wrap;
@@ -64,6 +66,9 @@
 }
 
 .about {
+  h2 {
+    text-align: center;
+  }
   margin-bottom: 50px;
   background-color: #f4f7fa;
   padding: 50px 0;
@@ -90,6 +95,9 @@
 }
 
 .advantages {
+  h2 {
+    text-align: center;
+  }
   margin-bottom: 30px;
   &__inner {
     display: flex;

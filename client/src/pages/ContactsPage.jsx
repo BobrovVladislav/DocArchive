@@ -42,7 +42,7 @@ function ContactsPage() {
                             <h2 className="contacts__feedback-info-title">Есть вопросы?</h2>
                             <p className="contacts__feedback-info-subtitle">Заполните форму и мы свяжемся с вами
                                 в течение одного рабочего дня.</p>
-                            <img src="../../public/images/contacts.png" alt="contacts" className="contacts__feedback-info-image" />
+                            <img src="/images/contacts.png" alt="contacts" className="contacts__feedback-info-image" />
                         </div>
                         <form className="contacts__feedback-form">
                             <div className="contacts__feedback-form-Icontainer">

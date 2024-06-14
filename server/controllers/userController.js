@@ -14,7 +14,7 @@ class UserController {
   async registration(req, res) {
     try {
       console.log(req.body)
-      const { email, password, photo, firstName, middleName, lastName, gender, birthDate, department, manager, position } = req.body;
+      const { email, password, firstName, middleName, lastName, gender, birthDate, department, manager, position } = req.body;
       if (!email || !password || !firstName || !middleName || !department || !manager || !position) {
         return res.status(400).json({ error: 'Некорректные данные' });
       }
@@ -32,7 +32,6 @@ class UserController {
       const newUser = await prisma.user.create({
         data: {
           password: hashPassword,
-          photo,
           firstName,
           middleName,
           lastName,
@@ -43,6 +42,7 @@ class UserController {
           position,
           contactInfo: { create: { email: email } },
           permissions: { create: { canEdit: false, canDelete: false, canDownload: false } },
+          // role: "admin"
         },
       });
 
@@ -84,7 +84,6 @@ class UserController {
   }
 
   async check(req, res) {
-
     const user = await prisma.user.findUnique({
       where: { id: req.user.id },
       include: {
@@ -98,13 +97,42 @@ class UserController {
     return res.json({ jwt, user });
   }
 
+  async getUserById(req, res) {
+    const { id } = req.params;
+
+    try {
+      // Проверяем, является ли пользователь администратором или запрашивает свой собственный профиль
+      if (req.user.role === "admin" || parseInt(id, 10) === req.user.id) {
+        const user = await prisma.user.findUnique({
+          where: { id: parseInt(id, 10) },
+          include: {
+            contactInfo: true,
+            permissions: true,
+          },
+        });
+        // Регенерируем JWT
+        const jwt = generateJwt(req.user.id, req.user.email, req.user.role);
+
+        return res.json({ jwt, user });
+      } else {
+        // Если пользователь не администратор и пытается получить данные другого пользователя
+        return res.status(403).json({ message: 'Отказано в доступе' });
+      }
+    } catch (error) {
+      console.error("Ошибка при получении данных пользователя:", error);
+      return res.status(500).json({ message: "Ошибка сервера при получении данных пользователя" });
+    }
+  }
+
   async getAllUsers(req, res) {
     try {
-
       const users = await prisma.user.findMany({
         include: {
-          permissions: true
-        }
+          permissions: true,
+        },
+        orderBy: {
+          middleName: 'asc',
+        },
       });
 
       return res.json({
@@ -139,12 +167,13 @@ class UserController {
   }
 
   async updatePhoto(req, res) {
+    const { id } = req.params;
     const { photo } = req.body;
 
     try {
       // Обновление фото пользователя в базе данных
       const updatedUser = await prisma.user.update({
-        where: { id: req.user.id },
+        where: { id: parseInt(id, 10) },
         data: { photo },
       });
 
