@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "build": "node index.js"
   },
   "dependencies": {
     "@prisma/client": "^5.7.1",

@@ -13,7 +13,6 @@ const generateJwt = (id, email, role) => {
 class UserController {
   async registration(req, res) {
     try {
-      console.log(req.body)
       const { email, password, firstName, middleName, lastName, gender, birthDate, department, manager, position } = req.body;
       if (!email || !password || !firstName || !middleName || !department || !manager || !position) {
         return res.status(400).json({ error: 'Некорректные данные' });
