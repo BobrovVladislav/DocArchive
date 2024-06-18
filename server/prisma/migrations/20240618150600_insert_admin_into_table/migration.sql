@@ -24,5 +24,9 @@ BEGIN
        -- Вставка информации о контактах администратора
        INSERT INTO "ContactInfo" ("userId", "email")
        VALUES (new_user_id, 'admin@mail.ru');
+
+        -- Вставка разрешений для администратора
+       INSERT INTO "Permission" ("userId", "canEdit", "canDelete", "canDownload")
+       VALUES (new_user_id, true, true, true);
    END IF;
 END $$;
