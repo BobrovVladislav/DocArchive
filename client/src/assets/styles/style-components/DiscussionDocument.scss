@@ -1,0 +1,80 @@
+@import "../vars";
+@import "../mixins";
+
+.discussion {
+  width: 100%;
+  padding: 35px 50px;
+
+  &__messages-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+  &__message-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 35px;
+
+    &-user {
+      display: flex;
+      gap: 10px;
+      width: 30%;
+      &-img {
+        width: 45px;
+        height: 45px;
+        border-radius: 100%;
+      }
+      &-info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      &-name {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 150%;
+        letter-spacing: 0.01em;
+      }
+      &-date {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 150%;
+        letter-spacing: 0.01em;
+        color: #606f89;
+      }
+    }
+    &-content {
+      width: 65%;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 140%;
+    }
+  }
+  &__form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    &-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 35px;
+    }
+    &-user {
+      display: flex;
+      gap: 10px;
+      width: 30%;
+    }
+    &-message {
+      width: 65%;
+      padding: 25px;
+      border-radius: 25px;
+      background: #f3f3f3;
+      height: 200px;
+    }
+    &-btn {
+      margin-top: 50px; /* Помещаем кнопку внизу формы */
+      align-self: flex-end;
+    }
+  }
+}

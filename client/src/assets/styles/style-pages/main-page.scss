@@ -2,298 +2,188 @@
 @import "../mixins";
 
 .welcome {
-  //   padding: 50px 0;
+  margin-bottom: 30px;
   &__inner {
+    padding: 50px 0 50px 35px;
     position: relative;
-    height: 500px;
-    background: url(../../../../public/images/welcome.png) center center/cover
-      no-repeat;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    background: url(/images/welcome.png) center center/cover no-repeat;
+    background-color: #273895;
   }
-
-  &__title {
-    color: #fff;
-
-    text-align: center;
-    font-size: 36px;
-    font-style: normal;
-    font-weight: 800;
-    letter-spacing: 3.96px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    margin-top: 100px;
-  }
-
   &__info {
-    position: absolute;
-    bottom: -100px;
-    left: 50%; // Позиционируем блок по центру
-    transform: translateX(
-      -50%
-    ); // Центрируем блок относительно родительского блока
-    max-width: 500px;
-    padding: 25px;
-    border-radius: 10px;
-    background-color: #fff;
-    box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.25);
-    text-align: center;
-
-    @include tablet {
-      width: 450px;
-    }
-    @include mobile {
-      bottom: -150px;
-      width: 250px;
-    }
-
+    width: 610px;
     &-title {
-      font-size: 18px;
-      font-weight: 500;
-      margin-bottom: 15px;
-      @include mobile {
-        font-size: 16px;
-      }
+      color: #fff;
+      text-align: left;
+      text-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+      font-weight: 400;
+      font-size: 36px;
+      line-height: 137%;
     }
-
     &-text {
-      font-size: 16px;
-      font-weight: 400;
-
-      margin-bottom: 25px;
-      span {
-        font-style: italic;
-      }
-      @include mobile {
-        font-size: 14px;
-      }
+      width: 490px;
+      color: #fff;
+      text-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+      margin-top: 35px;
+      margin-bottom: 75px;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 150%;
     }
   }
 }
 
-.events {
-  margin-top: calc(110px + 50px);
-  background-color: #eef0f4;
-  padding: 25px 0;
-  @include tablet {
-    margin-top: calc(85px + 50px);
+.opportunities {
+  margin-bottom: 30px;
+  h2 {
+    text-align: center;
   }
-  @include mobile {
-    margin-top: calc(160px + 50px);
-  }
-
-  &__list {
-    display: flex;
-    justify-content: space-between;
-    @include mobile {
-      flex-direction: column;
-      gap: 25px;
-    }
-  }
-  &__item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    @include laptop {
-      max-width: 315px;
-    }
-    @include tablet {
-      max-width: 235px;
-    }
-    @include mobile {
-    }
-    &-title {
-      font-size: 24px;
-      font-style: normal;
-      font-weight: 400;
-    }
-  }
-}
-
-.places {
-  margin-top: 50px;
   &__list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
-    gap: 25px;
+    gap: 40px 15px;
+    &-item {
+      width: calc(25% - 12px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      padding: 35px 25px;
+
+      background: #f9f9f9;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1);
+      border-radius: 20px;
+      &-img {
+      }
+      &-name {
+        font-weight: 600;
+        font-size: 22px;
+        text-align: center;
+        color: #434449;
+      }
+    }
   }
-  &__item {
+}
+
+.about {
+  h2 {
+    text-align: center;
+  }
+  margin-bottom: 50px;
+  background-color: #f4f7fa;
+  padding: 50px 0;
+  &__inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 250px;
+  }
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 400px;
+
+    &-paragraph {
+      font-weight: 400;
+      font-size: 18px;
+    }
+  }
+  &__image {
+    height: 450px;
+  }
+}
+
+.advantages {
+  h2 {
+    text-align: center;
+  }
+  margin-bottom: 30px;
+  &__inner {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
+    h2 {
+      margin-bottom: 0;
+    }
+  }
+  &__list {
+    &-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 60px;
+      padding: 50px;
 
-    width: calc(25% - 18.75px);
-
-    @include tablet {
-      width: calc(33% - 15px);
-    }
-    @include mobile {
-      width: calc(50% - 15px);
-    }
-    &-img {
-      width: 100%;
-    }
-    &-title {
-      max-width: 200px;
-      font-size: 24px;
-      font-style: normal;
-      font-weight: 400;
+      &-img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 250px;
+        height: 150px;
+      }
+      &-info {
+        &-title {
+          font-family: "Rubik", sans-serif;
+          font-weight: 600;
+          font-size: 16px;
+          line-height: 225%;
+          margin-bottom: 15px;
+          color: #404040;
+        }
+        &-subtitle {
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 143%;
+          width: 515px;
+        }
+      }
     }
   }
 }
 
 .banner {
-  background-color: #a91f13;
+  background-color: #273895;
   margin-top: 50px;
   &__inner {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 50px;
-    @include tablet {
-      padding: 25px 0;
-      justify-content: center;
-    }
-    @include mobile {
-      padding: 25px 0;
-      justify-content: center;
-    }
-    &-img {
-      height: 350px;
-      margin-top: 15px;
-      @include laptop {
-        height: 300px;
-      }
-      @include tablet {
-        display: none;
-      }
-      @include mobile {
-        display: none;
-      }
-    }
-    &-content {
-      display: flex;
-      flex-direction: column;
-      max-width: 580px;
-      @include tablet {
-        flex-direction: row;
-        gap: 25px;
-      }
-      @include mobile {
-        gap: 25px;
-      }
-    }
+    justify-content: space-evenly;
+    padding: 75px 0;
+    gap: 35px;
   }
   &__title {
+    font-family: "Rubik", sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 137%;
+    text-align: center;
+    margin: 0;
     color: #fff;
-    font-size: 36px;
-    font-style: normal;
-    font-weight: 500;
-    margin-bottom: 15px;
-    max-width: 500px;
-    @include laptop {
-      font-size: 30px;
-      max-width: 450px;
-    }
-    @include tablet {
-      font-size: 24px;
-      max-width: 450px;
-      margin-bottom: 0;
-      text-align: center;
-    }
-    @include mobile {
-      font-size: 24px;
-      margin-bottom: 0;
-      text-align: center;
-    }
+    width: 385px;
   }
-  &__text {
-    color: #fff;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 300;
-    margin-bottom: 50px;
-    @include laptop {
-      margin-bottom: 25px;
-      font-size: 22px;
-    }
-    @include tablet {
-      display: none;
-    }
-    @include mobile {
-      display: none;
-    }
-  }
-  &__button {
-    align-self: flex-end;
-    @include laptop {
-      align-self: center;
-    }
-    @include tablet {
-      align-self: center;
-    }
-    @include mobile {
-      align-self: center;
-    }
-  }
-}
-
-.advantages {
-  background: #eef0f4;
-  margin-top: 50px;
-  &__inner {
+  &__list {
     display: flex;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    padding: 25px 0;
-    @include tablet {
-      align-items: center;
-    }
-    @include mobile {
-      gap: 15px;
-      justify-content: space-evenly;
-    }
-  }
-  &__item {
-    display: flex;
-    padding: 0 5px;
-    width: calc(25% - 18.75px);
-    justify-content: center;
-    @include mobile {
-      width: calc(50% - 18.75px);
-    }
-    &-text {
+    gap: 25px;
+    &-item {
       display: flex;
       flex-direction: column;
-    }
-    &-title {
-      text-align: center;
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 5px;
-      @include tablet {
-        margin-bottom: 0;
-        font-weight: 500;
+      &-number {
+        font-weight: 700;
+        font-size: 32px;
+        line-height: 150%;
+        text-align: center;
+        background: linear-gradient(143deg, #4614e8 0%, #bca7ff 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
       }
-      @include mobile {
+      &-title {
+        font-weight: 500;
         font-size: 14px;
-        margin-bottom: 0;
-        font-weight: 500;
-      }
-    }
-    &-subtitle {
-      text-align: center;
-      font-size: 14px;
-      font-weight: 400;
-      @include tablet {
-        display: none;
-      }
-      @include mobile {
-        display: none;
+        line-height: 143%;
+        text-align: center;
+        color: #fff;
       }
     }
   }

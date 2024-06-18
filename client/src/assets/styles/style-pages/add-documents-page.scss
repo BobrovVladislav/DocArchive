@@ -1,0 +1,91 @@
+@import "../vars";
+@import "../mixins";
+
+.download {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 780px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15),
+    0 3px 6px 0 rgba(75, 81, 91, 0.15);
+  border-radius: 8px;
+  margin: 70px auto;
+
+  &__header {
+    width: 100%;
+    padding: 25px;
+    border-bottom: 2px solid #e4e7e9;
+    &-title {
+      margin: 0;
+      font-weight: 500;
+      font-size: 32px;
+      text-align: center;
+    }
+  }
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 580px;
+    margin: 50px;
+  }
+  &__drag {
+    width: 100%;
+    border: 2px dashed $primaryColor;
+    border-radius: 8px;
+    min-height: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    &-img {
+      width: 160px;
+      height: 190px;
+      background-image: url("/images/drag&drop.png"); /* Замените путем к вашему фоновому изображению */
+      background-size: cover;
+      background-position: center;
+    }
+    input {
+      display: none;
+    }
+
+    p {
+      margin-top: 50px;
+      font-weight: 500;
+      font-size: 20px;
+      span {
+        color: #273895;
+      }
+    }
+
+    &.active {
+      background-color: rgba(
+        0,
+        0,
+        0,
+        0.05
+      ); /* Цвет фона при активации drag&drop */
+    }
+  }
+
+  &__info {
+    margin-top: 30px;
+    font-weight: 400;
+    font-size: 18px;
+  }
+
+  &__button {
+    margin-top: 50px;
+    button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+  }
+}

@@ -10,7 +10,7 @@ datasource db {
 model User {
   id       Int    @id @default(autoincrement())
   password String
-  role     String @default("user")
+  role     Role @default(user)
 
   photo       String?
   firstName   String
@@ -18,11 +18,13 @@ model User {
   lastName    String?
   gender      String?
   birthDate   DateTime?
-  department  String
+  department  String 
   manager     String
   position    String
   contactInfo ContactInfo?
   permissions Permission? 
+  versions    DocumentVersion[]
+  messages    Message[]
 }
 
 model ContactInfo {
@@ -41,4 +43,57 @@ model Permission {
   canDelete   Boolean @default(false)
   canDownload Boolean @default(false)
   user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Document {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique @default(uuid())
+  name        String
+  type        String
+  description String?
+  tags        String[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  histories   DocumentVersion[]
+  messages    Message[]
+}
+
+model DocumentVersion {
+  id          Int              @id @default(autoincrement())
+  documentId  Int
+  authorId    Int
+  version     Int  @default(1)
+  url         String?
+  size        Int
+  status      Status @default(new)
+  createdAt   DateTime         @default(now())
+
+  document    Document         @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  author      User             @relation(fields: [authorId], references: [id])
+}
+
+model Message {
+  id          Int      @id @default(autoincrement())
+  documentId  Int
+  userId      Int
+  content     String
+  createdAt   DateTime @default(now())
+
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  admin
+  user
+}
+
+enum Status {
+  new
+  progress
+  review
+  correction
+  rejected
+  approved
 }
