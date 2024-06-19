@@ -58,6 +58,16 @@
       &-text {
         color: #757575;
       }
+      &.active {
+        .admin__nav-item-text {
+          color: $primaryColor;
+        }
+        .admin__nav-item-icon {
+          * {
+            fill: $primaryColor;
+          }
+        }
+      }
     }
   }
   &__content {
