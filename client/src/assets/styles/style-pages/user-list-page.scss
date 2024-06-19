@@ -69,7 +69,7 @@
         align-items: center;
         label {
           font-weight: 400;
-          font-size: 12px;
+          font-size: 14px;
           letter-spacing: 0.05em;
           text-transform: uppercase;
           text-align: center;
@@ -97,6 +97,48 @@
           top: 50%;
           transform: translateY(-50%);
           pointer-events: none;
+        }
+      }
+    }
+    &-bulk {
+      display: flex;
+      justify-content: space-between;
+      text-align: center;
+      label {
+        margin: 0;
+        font-weight: 400;
+        font-size: 14px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        text-align: center;
+        color: #606f89;
+      }
+      &-actions {
+        display: flex;
+        gap: 35px;
+        align-items: center;
+      }
+      &-switches {
+        display: flex;
+        gap: 25px;
+      }
+      &-switch {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      &-btn {
+        color: #606f89;
+        display: flex;
+        background-color: inherit;
+        gap: 15px;
+        transition: color 0.5s ease-in;
+        &:hover {
+          color: red;
+          * {
+            transition: fill 0.5s ease-in;
+            fill: red;
+          }
         }
       }
     }
@@ -131,6 +173,44 @@
       }
       &:nth-child(odd) {
         background-color: #fff;
+      }
+      &.selected {
+        background-color: #ebf2ff;
+        .user-list__table-select {
+          border-left: 5px solid $primaryColor;
+        }
+      }
+    }
+    &-select {
+      &-input {
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        margin-right: 8px;
+        border: 1px solid #bbbbbb;
+        border-radius: 3px;
+        cursor: pointer;
+        position: relative;
+        &::before {
+          content: "\2714";
+          display: block;
+          font-size: 14px;
+          color: $primaryColor;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          opacity: 0;
+        }
+        &:checked {
+          border: 1px solid $primaryColor;
+          ~ label {
+            color: #000;
+          }
+          &:before {
+            opacity: 1;
+          }
+        }
       }
     }
   }
