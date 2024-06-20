@@ -49,6 +49,19 @@ function RegisterUserPage() {
             }
 
             toast.success(data.message);
+            setFormData({
+                email: '',
+                password: '',
+                photo: '',
+                firstName: '',
+                lastName: '',
+                middleName: '',
+                gender: '',
+                birthDate: '',
+                department: '',
+                manager: '',
+                position: ''
+            });
         } catch (error) {
             console.error("Ошибка при отправке запроса:", error);
             toast.error(error.message || "Произошла ошибка при регистрации");
@@ -69,7 +82,7 @@ function RegisterUserPage() {
                         </div>
                         <div className="register__form-Icontainer">
                             <label className="register__form-label" htmlFor='password'>Пароль*</label>
-                            <input className="register__form-input" type="password" id="password" name='password' value={formData.password} onChange={handleChange} placeholder='8+ символов' required />
+                            <input className="register__form-input" type="password" id="password" name='password' value={formData.password} onChange={handleChange} placeholder='5+ символов' required />
                         </div>
                     </div>
                 </div>

@@ -129,7 +129,7 @@ function HistoryDocument() {
                             <td>{new Date(version.createdAt).toLocaleDateString()}</td>
                             <td>{formatFileSize(version.size)}</td>
                             <td> <div className={`status-${version.status.replace('_', '-')} status`}>{getStatusLabel(version.status)}</div></td>
-                            <td><a href={version.url} download><IconFileDownload /></a></td>
+                            <td><a href={version.url} download target='_blank'><IconFileDownload /></a></td>
                         </tr>
                     ))}
                 </tbody>

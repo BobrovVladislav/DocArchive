@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { Layout } from "./components/layouts/Layout.jsx";
 import AuthPage from "./pages/AuthPage.jsx";
 import PersonalAccountLayout from './components/layouts/PersonalAccountLayout.jsx';
@@ -29,6 +30,11 @@ import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
   const { jwt, user, loading } = useAuth();
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   if (jwt && loading) {
     return <Loader />

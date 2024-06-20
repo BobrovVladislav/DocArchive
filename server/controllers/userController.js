@@ -123,6 +123,94 @@ class UserController {
     }
   }
 
+  async getUserDocumentsById(req, res) {
+    const { id } = req.params;
+
+    try {
+      // Проверяем, является ли пользователь администратором или запрашивает свои собственные документы
+      if (req.user.role === "admin" || parseInt(id, 10) === req.user.id) {
+        // Находим последние версии документов пользователя
+        const latestVersions = await prisma.documentVersion.findMany({
+          where: {
+            authorId: parseInt(id, 10),
+          },
+          // Сортируем версии документов по дате создания в обратном порядке, чтобы первой была последняя версия
+          orderBy: {
+            createdAt: 'desc',
+          },
+          // Выбираем только одну запись для каждого documentId
+          distinct: ['documentId'],
+          include: {
+            document: true, // Включаем данные о самом документе
+          },
+        });
+
+        // Формируем ответ клиенту, содержащий только последние версии документов пользователя
+        const documents = latestVersions.map(version => ({
+          id: version.document.id,
+          name: version.document.name,
+          type: version.document.type,
+          createdAt: version.createdAt,
+          authorId: version.authorId,
+          url: version.url,
+          size: version.size,
+          status: version.status,
+        }));
+
+        return res.json({ documents });
+      } else {
+        // Если пользователь не администратор и пытается получить данные другого пользователя
+        return res.status(403).json({ message: 'Отказано в доступе' });
+      }
+    } catch (error) {
+      console.error("Ошибка при получении документов пользователя:", error);
+      return res.status(500).json({ message: "Ошибка сервера при получении документов пользователя" });
+    }
+  }
+
+
+
+  async updateUserById(req, res) {
+    try {
+      const { id } = req.params;
+      const { firstName, middleName, lastName, gender, birthDate, department, manager, position } = req.body;
+
+      // Проверяем наличие userId
+      if (!id) {
+        return res.status(400).json({ error: 'Отсутствует идентификатор пользователя (userId)' });
+      }
+
+      // Проверяем существование пользователя по userId
+      const existingUser = await prisma.user.findUnique({
+        where: { id: parseInt(id, 10) },
+      });
+
+      if (!existingUser) {
+        return res.status(404).json({ error: 'Пользователь не найден' });
+      }
+
+      // Обновляем данные пользователя
+      const updatedUser = await prisma.user.update({
+        where: { id: parseInt(id, 10) },
+        data: {
+          firstName,
+          middleName,
+          lastName,
+          gender,
+          birthDate: new Date(birthDate),
+          department,
+          manager,
+          position,
+        },
+      });
+
+      return res.json({ message: 'Данные пользователя успешно обновлены', updatedUser });
+    } catch (error) {
+      console.error('Ошибка при обновлении пользователя:', error);
+      return res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+    }
+  }
+
   async getAllUsers(req, res) {
     try {
       const users = await prisma.user.findMany({

@@ -154,7 +154,6 @@ class DocumentController {
 
     async addVersion(req, res) {
         const { url, status, size } = req.body;
-        console.log(req.body)
         const authorId = req.user.id;
         const { id } = req.params;
 

@@ -10,12 +10,14 @@ function ContactsPage() {
         <>
             <div className="contacts">
                 <div className="contacts__map">
-                    <iframe
-                        style={{ pointerEvents: "none" }}
-                        src="https://yandex.ru/map-widget/v1/?um=constructor%3Aa536a1ee8dc2c13ab25a324d4569047658a0afad21109adf88aa072b50872bfa&amp;source=constructor"
-                        width="100%"
-                        height="500"
-                        frameBorder="0" ></iframe>
+                    <a href="https://yandex.ru/maps/?um=constructor%3Aa536a1ee8dc2c13ab25a324d4569047658a0afad21109adf88aa072b50872bfa" target="_blank" rel="noopener noreferrer">
+                        <img
+                            src="/images/map.png"
+                            alt="Карта"
+                            width="100%"
+                            height="500"
+                        />
+                    </a>
                 </div>
                 <div className="container">
                     <div className="contacts__list">
